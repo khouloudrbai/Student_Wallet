@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:student_wallet/authentification/profile.dart';
 import 'package:student_wallet/my_button.dart';
 import 'package:student_wallet/my_list_tile.dart';
 import 'package:student_wallet/wallet.dart';
@@ -25,14 +26,18 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+
+            },
           icon: Icon(
             Icons.home,
             size: 28,),),
           IconButton(onPressed: (){
-            
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+
           },icon: Icon(
-            Icons.settings,
+            Icons.account_box,
             size: 28,),)
 
         ],),),

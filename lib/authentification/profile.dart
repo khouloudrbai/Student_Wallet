@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:student_wallet/Home.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String fullName;
   final String cardNumber;
   final String email;
 
-  const ProfileScreen({
+  const ProfileScreen( {
     Key? key,
     required this.fullName,
     required this.cardNumber,
@@ -27,16 +28,23 @@ class ProfileScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+
+
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+
+                },
                 icon: Icon(
                   Icons.home,
                   size: 28,
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+
+                },
                 icon: Icon(
-                  Icons.settings,
+                  Icons.account_box,
                   size: 28,
                 ),
               ),
