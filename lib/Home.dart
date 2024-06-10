@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:student_wallet/authentification/profile.dart';
 import 'package:student_wallet/my_button.dart';
@@ -7,13 +10,45 @@ import 'package:student_wallet/my_list_tile.dart';
 import 'package:student_wallet/wallet.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+
+
+  
+   Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+
+
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void navigateToProfile(BuildContext context) async {
+    User? user = _auth.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if (userDoc.exists) {
+        String fullName = userDoc.get('fullName');
+        String cardNumber = userDoc.get('cardNumber');
+        String userEmail = userDoc.get('email');
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(
+              fullName: fullName,
+              cardNumber: cardNumber,
+              email: userEmail,
+            ),
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(msg: "User data not found!");
+      }
+    }
+  }
   final _controller =PageController();
   @override
   Widget build(BuildContext context) {
@@ -33,8 +68,10 @@ class _HomeState extends State<Home> {
           icon: Icon(
             Icons.home,
             size: 28,),),
+
+
           IconButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+                navigateToProfile(context);
 
           },icon: Icon(
             Icons.account_box,
