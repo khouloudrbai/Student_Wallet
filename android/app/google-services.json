@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30554660382",
+    "project_id": "studentloan-b389b",
+    "storage_bucket": "studentloan-b389b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30554660382:android:113d9cb73d9307c775180f",
+        "android_client_info": {
+          "package_name": "com.example.student_loan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD93glAXbTfRlBDnQucJ2b6oAQD-_ULrrk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
