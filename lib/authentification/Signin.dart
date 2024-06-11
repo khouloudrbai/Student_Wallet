@@ -128,10 +128,8 @@ class _login_screenState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 200,
-                      
-                    ),
+                    Image.asset('images/wallet.png',height: 200,),
+                   
                     SizedBox(height: 35),
                     emailField,
                     SizedBox(height: 30),
@@ -186,7 +184,7 @@ class _login_screenState extends State<SignIn> {
 
         if (userDoc.exists) {
           String fullName = userDoc.get('fullName');
-          String cardNumber = userDoc.get('cardNumber');
+          String salary = userDoc.get('salary');
           String userEmail = userDoc.get('email');
 
           Fluttertoast.showToast(msg: "Login Successful!!");
@@ -195,7 +193,7 @@ class _login_screenState extends State<SignIn> {
             MaterialPageRoute(
               builder: (context) => ProfileScreen(
                 fullName: fullName,
-                cardNumber: cardNumber,
+                salary: salary,
                 email: userEmail,
               ),
             ),

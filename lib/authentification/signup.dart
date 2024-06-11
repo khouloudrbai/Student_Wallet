@@ -22,7 +22,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final TextEditingController fullName = TextEditingController();
-  final TextEditingController cardNumber = TextEditingController();
+  final TextEditingController salary = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController verifpassword = TextEditingController();
@@ -34,7 +34,7 @@ class _SignUpState extends State<SignUp> {
   @override
   void dispose() {
     fullName.dispose();
-    cardNumber.dispose();
+    salary.dispose();
     email.dispose();
     password.dispose();
     verifpassword.dispose();
@@ -77,24 +77,24 @@ class _SignUpState extends State<SignUp> {
 
     final LastnameField = TextFormField(
       autocorrect: false,
-      controller: cardNumber,
+      controller: salary,
       keyboardType: TextInputType.text,
       validator: (value) {
         RegExp regex = RegExp(r'^.{3,}$');
         if (value!.isEmpty) {
-          return ("Lastname cannot be empty");
+          return ("salary cannot be empty");
         } else if (!regex.hasMatch(value)) {
-          return ("Lastname must be longer than 3 characters");
+          return ("salary must be longer than 3 characters");
         }
         return null;
       },
       onSaved: (value) {
-        cardNumber.text = value!;
+        salary.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: " cardNumber",
+        hintText: " salary",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -220,6 +220,7 @@ class _SignUpState extends State<SignUp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    Image.asset('images/wallet.png',height: 200,),
                     FirstnameField,
                     SizedBox(height: 15),
                     LastnameField,
@@ -266,7 +267,7 @@ postDetailsToFirestore() async {
       uid: user.uid,
       email: user.email,
       fullName: fullName.text,
-      cardNumber: cardNumber.text,
+      salary: salary.text,
     );
 
     try {

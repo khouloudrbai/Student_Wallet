@@ -23,8 +23,68 @@ class _HomeState extends State<Home> {
 
 
    final FirebaseAuth _auth = FirebaseAuth.instance;
+    late String salary="";
+
+     List<Widget> _myListTiles = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadListTiles();
+    getdata();
+  }
+
+
+ void _loadListTiles() async {
+  User? user = _auth.currentUser;
+
+  if (user != null) {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('tiles').get();
+
+      setState(() {
+        _myListTiles = querySnapshot.docs.map((doc) {
+          return MyListTile(
+            TileSubtile: doc.get('tileSubtile'),
+            imagepath: 'images/statics.jpg', // Mettez à jour l'image si nécessaire
+            tileName: doc.get('tileName'),
+            docId: doc.id,
+            onDelete: (docId) {
+              // Supprimer la tuile de Firestore et de l'UI
+              FirebaseFirestore.instance.collection('users').doc(user.uid).collection('tiles').doc(docId).delete();
+              setState(() {
+                _myListTiles.removeWhere((tile) => tile is MyListTile && tile.docId == docId);
+              });
+            },
+          );
+        }).toList();
+      });
+    } catch (e) {
+      print("Erreur lors du chargement des tuiles: $e");
+      // Gérer l'erreur ici (par exemple, afficher un message d'erreur)
+    }
+  }
+}
+
+
+
+
+   void getdata() async {
+    User? user = _auth.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          salary = userDoc.get('salary').toString();         });
+      }
+    }
+  }
+
 
   void navigateToProfile(BuildContext context) async {
+
     User? user = _auth.currentUser;
 
     if (user != null) {
@@ -32,14 +92,14 @@ class _HomeState extends State<Home> {
 
       if (userDoc.exists) {
         String fullName = userDoc.get('fullName');
-        String cardNumber = userDoc.get('cardNumber');
+        String salary = userDoc.get('salary');
         String userEmail = userDoc.get('email');
 
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProfileScreen(
               fullName: fullName,
-              cardNumber: cardNumber,
+              salary: salary,
               email: userEmail,
             ),
           ),
@@ -50,6 +110,88 @@ class _HomeState extends State<Home> {
     }
   }
   final _controller =PageController();
+
+  void _addNewListTile(BuildContext context) async {
+  String tileSubtile = '';
+  String tileName = '';
+
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Add New List Section'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: 'Section Name'),
+              onChanged: (value) => tileSubtile = value,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Tile Name'),
+              onChanged: (value) => tileName = value,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              User? user = _auth.currentUser;
+              if (user != null) {
+                    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('users').doc(user.uid).collection('tiles').get();
+
+                // Add new tile to Firestore under the user's document
+                await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+                  'tiles': FieldValue.arrayUnion([
+                    {
+                      'tileSubtile': tileSubtile,
+                      'tileName': tileName,
+                    }
+                  ])
+                });
+                setState(() {
+                  _myListTiles.add(
+                    MyListTile(
+                      TileSubtile: tileSubtile,
+                      imagepath: 'images/statics.jpg',
+                      tileName: tileName,
+                      docId: '', // No need for docId in this case
+                      onDelete: (docId) {
+                        // Delete tile from Firestore and UI
+                        FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+                          'tiles': FieldValue.arrayRemove([
+                            {
+                              'tileSubtile': tileSubtile,
+                              'tileName': tileName,
+                            }
+                          ])
+                        });
+                        setState(() {
+                          _myListTiles.removeWhere((tile) => tile is MyListTile && tile.TileSubtile == tileSubtile && tile.tileName == tileName);
+                        });
+                      },
+                    ),
+                  );
+                });
+              }
+            },
+            child: Text('Add'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -110,36 +252,38 @@ class _HomeState extends State<Home> {
                   color: Colors.grey[400],
                   shape:BoxShape.circle,
                 ),
-                child: Icon(Icons.add),
-              )
+                child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: (){_addNewListTile(context);},
+                      ),),
                  
                 ],
               ),
               
              
+
           ),
+            
+
           SizedBox(height: 25,),
            Container(
             height: 200,
             child: PageView(children: [
               MyWallet(
                 name: 'current situation',
-                credit: 500.00,
-                card: 15284,
+                salary:salary,
                 Date: DateTime.now(),
                 color: Colors.deepPurple[300],
               ),
               MyWallet(
                 name:'loans',
-                credit: 500.00,
-                card: 15284,
+                salary:salary,
                 Date: DateTime.now(),
                 color: Colors.blue[300],
               ),
               MyWallet(
                 name:'Borrowed money',
-                credit: 500.00,
-                card: 15284,
+                salary: salary,
                 Date: DateTime.now(),
                 color: Colors.green[300],
               )
@@ -165,20 +309,29 @@ class _HomeState extends State<Home> {
                    MyButton(butttonText:'payment' ,iconImage:'images/payment.jpg' ,),
                    MyButton(butttonText:'payment' ,iconImage:'images/payment.jpg' ,),
                    MyButton(butttonText:'payment' ,iconImage:'images/payment.jpg' ,),
+                     Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  shape:BoxShape.circle,
+                ),
+                child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: (){_addNewListTile(context);},
+                      ),),
 
                 ],
                ),),
                SizedBox(height: 25,),
                Padding(
                  padding:const EdgeInsets.symmetric(horizontal:25.0),
-                 child:Column(
-                 children: [
                  
-                   MyListTile(TileSubtile: 'payment income', imagepath: 'images/statics.jpg', tileName: 'statics subtile'),
-                    MyListTile(TileSubtile: 'payment income', imagepath: 'images/statics.jpg', tileName: 'statics subtile'),
-                   MyListTile(TileSubtile: 'payment income', imagepath: 'images/statics.jpg', tileName: 'statics subtile'),
+                   child: Column(
+                  children: _myListTiles,
+                     
+                ),
 
-                 ],),
+                
                 )
           ],
         
@@ -188,3 +341,4 @@ class _HomeState extends State<Home> {
 
   }
 }
+

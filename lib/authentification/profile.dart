@@ -6,12 +6,12 @@ import 'package:student_wallet/Home.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String fullName;
-  final String cardNumber;
+  final String salary;
   final String email;
 
   ProfileScreen({
     required this.fullName,
-    required this.cardNumber,
+    required this.salary,
     required this.email,
   });
 
@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     TextEditingController fullNameController = TextEditingController(text: widget.fullName);
-    TextEditingController cardNumberController = TextEditingController(text: widget.cardNumber);
+    TextEditingController salaryController = TextEditingController(text: widget.salary);
     TextEditingController emailController = TextEditingController(text: widget.email);
 
     return Scaffold(
@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ProfileScreen(
                       fullName: widget.fullName,
-                      cardNumber: widget.cardNumber,
+                      salary: widget.salary,
                       email: widget.email,
                     ),
                   ));
@@ -150,9 +150,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextField(
-                        controller: cardNumberController,
+                        controller: salaryController,
                         decoration: InputDecoration(
-                          labelText: 'Card Number:',
+                          labelText: 'salary:',
                         ),
                         style: TextStyle(fontSize: 16),
                         textAlign: TextAlign.center,

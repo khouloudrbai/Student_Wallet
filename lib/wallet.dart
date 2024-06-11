@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class MyWallet extends StatelessWidget {
 
-  final double credit;
-  final int card;
+  final String salary;
   final DateTime Date;
   final color;
   final String name;
@@ -12,8 +11,7 @@ class MyWallet extends StatelessWidget {
   const MyWallet({
   Key?key,
 
-  required this.credit,
-  required this.card,
+  required this.salary,
  required this.Date,
   required this.color,
   required this.name,
@@ -52,7 +50,7 @@ class MyWallet extends StatelessWidget {
                   fontSize: 25),),
                   SizedBox(height:5),
                 Text(
-                '\$'+credit.toString(),
+                '\$'+salary.toString(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -64,11 +62,7 @@ class MyWallet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     //card number
-                    Text(
-                      card.toString(),
-                    style: TextStyle(
-                      color: Colors.white, 
-                    ),),
+                  
                     //date
                     Text(
                       Date.toString(),

@@ -6,14 +6,16 @@ class MyListTile extends StatelessWidget {
   final String imagepath;
   final String tileName;
   final String TileSubtile;
-
+  final Function onDelete;
+final String docId;
 
 
   const MyListTile({
     super.key,
     required this.TileSubtile,
     required this.imagepath,
-    required this.tileName});
+    required this.tileName,
+    required this.onDelete, required  this.docId });
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class MyListTile extends StatelessWidget {
         child:Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                     
                       Container(
                         height: 80,
                         padding: EdgeInsets.all(12),
@@ -47,6 +50,13 @@ class MyListTile extends StatelessWidget {
                             color: Colors.grey[600],
                           ),),
                         ],
+                      ),
+                        IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          // Call onDelete callback when delete button is pressed
+                          onDelete(docId);
+                        },
                       ),
                       Icon(Icons.arrow_forward_ios),
                     ],
