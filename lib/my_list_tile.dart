@@ -54,7 +54,6 @@ final String docId;
                         IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          // Call onDelete callback when delete button is pressed
                           onDelete(docId);
                         },
                       ),

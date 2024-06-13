@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:student_wallet/Home.dart';
+import 'package:student_wallet/MoneyDetails.dart';
 
 class MyButton extends StatelessWidget {
   final String iconImage;
@@ -17,17 +19,23 @@ class MyButton extends StatelessWidget {
                     height:90,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      //color: Colors.grey[100],
+                      color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [BoxShadow(
-                        color:Colors.white,
+                        color:Colors.grey,
                         blurRadius: 10,
                         spreadRadius: 10
                          )]
                       ), 
                     child: Center(
-                       child: Image.asset(iconImage),
-                    
+                       child:InkWell(
+                        onTap:(){
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context)=>MoneyDetails()),);
+                            },
+                             child:Image.asset(iconImage),
+                            )
+                                        
                     ),
                   ),
                   SizedBox(height: 12,),
